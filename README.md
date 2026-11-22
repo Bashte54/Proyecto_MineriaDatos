@@ -96,15 +96,21 @@ Se realizaron las siguientes actividades:
 
 ### Variables y preparación
 
-Se utilizaron las **12,205 sesiones** del dataset procesado y ocho características numéricas:
+Se utilizaron las **12,205 sesiones** del dataset procesado y doce características numéricas:
+`Administrative`, `Administrative_Duration`, `Informational`, `Informational_Duration`,
+`ProductRelated`, `ProductRelated_Duration`, `BounceRates`, `ExitRates`, 
+`PageValues`, `Avg_Tiempo_Producto`, `Total_paginasVisitadas` y `Duracion_Total`.
 
-- `Administrative` y `Administrative_Duration`.
-- `Informational` y `Informational_Duration`.
-- `ProductRelated` y `ProductRelated_Duration`.
-- `BounceRates` y `ExitRates`.
+Las doce características se estandarizaron con **`StandardScaler`**. **`Revenue` no se utilizó para entrenar K-Means**; se consultó posteriormente para interpretar los segmentos.
 
-Las ocho características se estandarizaron con **`StandardScaler`** para colocarlas en escalas comparables antes de calcular distancias euclidianas. **`Revenue` no se utilizó para entrenar K-Means**; se consultó posteriormente para interpretar los segmentos. El modelo definitivo utilizó las ocho variables estandarizadas, **sin aplicar `log1p`**.
+| Indicador | Resultado |
+|---|---:|
+| Silueta más alta | K = 2, 0.491 |
+| Silueta con K = 3 | 0.456 |
+| WCSS con K = 3 | 93,533.024 |
+| Sesiones | 12,205 |
 
+Se conservó **K = 3** por que explicable, no porque maximice la silueta.
 ### Selección de K y evaluación
 
 Se probaron valores de **K = 2 a K = 8**, utilizando el método del codo (inercia o WCSS) y el coeficiente de silueta.
@@ -119,12 +125,11 @@ Se probaron valores de **K = 2 a K = 8**, utilizando el método del codo (inerci
 Se seleccionó **K = 3** porque presentó la mayor silueta entre los valores evaluados y una reducción marcada de WCSS frente a K = 2. La silueta se estimó con una muestra aleatoria reproducible de 3,000 sesiones para disminuir el costo computacional; K-Means se ajustó con las 12,205 sesiones.
 
 ### Interpretación de los segmentos
-
 | Clúster | Segmento | Sesiones | Porcentaje | Compras | Tasa de conversión |
 |---|---|---:|---:|---:|---:|
-| 0 | Navegación intensiva | 1,607 | 13.17 % | 443 | **27.57 %** |
-| 1 | Navegación moderada | 9,679 | 79.30 % | 1,459 | **15.07 %** |
-| 2 | Navegación breve, con mayor rebote y salida | 919 | 7.53 % | 6 | **0.65 %** |
+| 0 | Navegación moderada | 9,952 | 81.54 % | 1,503 | 15.10 % |
+| 1 | Navegación intensiva | 1,331 | 10.90 % | 399 | **29.98 %** |
+| 2 | Navegación breve, con mayor rebote y salida | 922 | 7.56 % | 6 | **0.65 %** |
 
 - **Clúster 0:** concentra sesiones con mayor cantidad de páginas visitadas y tiempos de navegación; obtuvo la mayor tasa de conversión.
 - **Clúster 1:** reúne la mayoría de las sesiones, con actividad intermedia; concentra el mayor número absoluto de compras.
